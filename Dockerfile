@@ -13,6 +13,7 @@ RUN echo 'APT::Install-Recommends "false";' > /etc/apt/apt.conf.d/zz-local-tame
 RUN apt-get update && apt-get dist-upgrade -y \
  && apt-get install -y git ca-certificates build-essential autoconf automake \
     libssl-dev libcurl4-openssl-dev libjansson-dev libgmp-dev zlib1g-dev \
+    libcurl3 libjansson4 libssl1.1 \
  && apt-get --purge autoremove \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get clean -y
@@ -29,6 +30,8 @@ RUN git clone https://github.com/JayDDee/cpuminer-opt \
  && make clean && make -j8 && strip ./cpuminer && mv ./cpuminer /usr/local/bin/cpuminer-avx \
  && CFLAGS="-O3 -maes -mssse3 -mtune=intel -DUSE_ASM" CXXFLAGS="$CFLAGS -std=gnu++11" ./configure --with-curl \
  && make clean && make -j8 && strip ./cpuminer && mv ./cpuminer /usr/local/bin/cpuminer \
- && chmod +x /usr/local/bin/* && rm -rf /tmp/*
+ && chmod +x /usr/local/bin/* && rm -rf /tmp/* \
+ && apt-get remove --purge --auto-remove -y git ca-certificates build-essential autoconf automake \
+    libssl-dev libcurl4-openssl-dev libjansson-dev libgmp-dev zlib1g-dev
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
