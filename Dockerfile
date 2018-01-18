@@ -4,7 +4,7 @@
 # ex: docker run kalvin585/cpuminer -a yescrypt -o stratum+tcp://yescrypt.mine.zpool.ca:6233 -u 1P9uwDkvPhzp6rheW8Tzmd4GaYvSxcSSFE -p c=BTC,stats,d=2,id=$(hostname -s)
 #
 
-FROM debian:stretch
+FROM debian:testing-slim
 MAINTAINER Kalvin Harris <harriskalvin585@gmail.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -19,7 +19,8 @@ RUN echo 'APT::Install-Recommends "false";' > /etc/apt/apt.conf.d/zzz-no-recomme
     libssl-dev libcurl4-openssl-dev libjansson-dev libgmp-dev zlib1g-dev \
     libcurl3 libjansson4 libssl1.1 \
  && git clone https://github.com/JayDDee/cpuminer-opt \
- && cd cpuminer-opt && autoreconf -f -i -v && ./build-allarch.sh \
+ && cd cpuminer-opt && autoreconf -f -i -v \
+ && sed -i 's|"-O3 |"-Ofast |' build-allarch.sh && ./build-allarch.sh \
  && mv -t /usr/local/bin/ cpuminer-4way cpuminer-aes-avx2 cpuminer-aes-avx cpuminer-aes-sse42 cpuminer-sse42 cpuminer-sse2 \
  && chmod +x /usr/local/bin/* \
  && apt-get remove --purge --auto-remove -y \
