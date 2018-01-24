@@ -20,8 +20,8 @@ RUN echo 'APT::Install-Recommends "false";' > /etc/apt/apt.conf.d/zzz-no-recomme
     libcurl3 libjansson4 libssl1.1 \
  && git clone https://github.com/JayDDee/cpuminer-opt \
  && cd cpuminer-opt && autoreconf -f -i -v \
- && sed -i 's|"-O3 |"-Ofast |' build-allarch.sh && ./build-allarch.sh \
- && mv -t /usr/local/bin/ cpuminer-4way cpuminer-aes-avx2 cpuminer-aes-avx cpuminer-aes-sse42 cpuminer-sse42 cpuminer-sse2 \
+ && sed -i 's|"-O3 |"-Ofast |' build-allarch.sh && sed -i 's|cpuminer-aes-avx2|cpuminer-avx2|' build-allarch.sh && ./build-allarch.sh \
+ && mv -t /usr/local/bin/ cpuminer-avx2 cpuminer-aes-avx cpuminer-aes-sse42 cpuminer-sse42 cpuminer-sse2 \
  && chmod +x /usr/local/bin/* \
  && apt-get remove --purge --auto-remove -y \
     git ca-certificates build-essential autoconf automake \
